@@ -7,5 +7,6 @@ import (
 func main() {
 	fmt.Println("Lets start !!")
 
-	produce()
+	//produce()
+	consume()
 }

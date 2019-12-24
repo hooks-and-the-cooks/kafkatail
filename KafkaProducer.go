@@ -18,7 +18,7 @@ func produce() {
 
 	deliveryChan := make(chan kafka.Event)
 
-	value := "From Kafkatail!!"
+	value := "From Kafka Tail!!"
 
 	err := producer.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
