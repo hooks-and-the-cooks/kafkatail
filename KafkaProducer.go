@@ -5,25 +5,21 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-func produce() {
+func produce(brokerAddress string, kafkaTopic string, message string) {
 
 	producer, errorIfProducerNotCreated := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": "127.0.0.1:9092"})
+		"bootstrap.servers": brokerAddress})
 
 	if errorIfProducerNotCreated != nil {
 		fmt.Println("Could not create Kafka Producer", errorIfProducerNotCreated)
 	}
 
-	topic := "test"
-
 	deliveryChan := make(chan kafka.Event)
 
-	value := "From Kafka Tail!!"
-
 	err := producer.Produce(&kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Value:          []byte(value),
-		Headers:        []kafka.Header{{Key: "myTestHeader", Value: []byte("header values are binary")}},
+		TopicPartition: kafka.TopicPartition{Topic: &kafkaTopic, Partition: kafka.PartitionAny},
+		Value:          []byte(message),
+		Headers:        []kafka.Header{{Key: "Dummy Key", Value: []byte("Dummy Value")}},
 	}, deliveryChan)
 
 	if err != nil {
