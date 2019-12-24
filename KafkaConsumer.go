@@ -8,20 +8,21 @@ import (
 	"syscall"
 )
 
-func consume() {
+func consume(brokerAddress string, topic string) {
 
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
 
-	broker := "127.0.0.1"
 	consumer, _ := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers":     broker,
+		"bootstrap.servers":     brokerAddress,
 		"broker.address.family": "v4",
 		"group.id":              "consumer-group-1",
 		"session.timeout.ms":    6000,
-		"auto.offset.reset":     "earliest"})
+		"auto.offset.reset":     "latest"})
 
-	topics := []string{"test"}
+	topics := []string{}
+
+	topics = append(topics, topic)
 
 	_ = consumer.SubscribeTopics(topics, nil)
 
@@ -51,7 +52,7 @@ func consume() {
 					run = false
 				}
 			default:
-				fmt.Printf("Ignored %v\n", e)
+				fmt.Println("Polling Continuosly, Please produce something")
 			}
 		}
 	}

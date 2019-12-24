@@ -28,6 +28,19 @@ func main() {
 				},
 				Flags: nil,
 			},
+			{
+				Name:        "consumer",
+				Aliases:     []string{"c"},
+				Usage:       "Run Kafka tail in consumer mode",
+				Description: "To Consume message from kafka",
+				Action: func(context *cli.Context) error {
+					brokerAddress := context.Args().Get(0)
+					kafkaTopic := context.Args().Get(1)
+					consume(brokerAddress, kafkaTopic)
+					return nil
+				},
+				Flags: nil,
+			},
 		},
 	}
 
