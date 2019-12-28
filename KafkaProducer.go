@@ -14,19 +14,20 @@ func produce(brokerAddress string, kafkaTopic string, message string) {
 		fmt.Println("Could not create Kafka Producer", errorIfProducerNotCreated)
 	}
 
-	deliveryChan := make(chan kafka.Event)
+	deliveryChannel := make(chan kafka.Event)
+
+	fmt.Println("message", message)
 
 	err := producer.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &kafkaTopic, Partition: kafka.PartitionAny},
 		Value:          []byte(message),
-		Headers:        []kafka.Header{{Key: "Dummy Key", Value: []byte("Dummy Value")}},
-	}, deliveryChan)
+	}, deliveryChannel)
 
 	if err != nil {
 		fmt.Println("Error in producing message to kafka", err)
 	}
 
-	e := <-deliveryChan
+	e := <-deliveryChannel
 	m := e.(*kafka.Message)
 
 	if m.TopicPartition.Error != nil {
@@ -36,5 +37,5 @@ func produce(brokerAddress string, kafkaTopic string, message string) {
 			*m.TopicPartition.Topic, m.TopicPartition.Partition, m.TopicPartition.Offset)
 	}
 
-	close(deliveryChan)
+	close(deliveryChannel)
 }
