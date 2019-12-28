@@ -1,11 +1,11 @@
-package main
+package kafka
 
 import (
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
-func produce(brokerAddress string, kafkaTopic string, message string) {
+func Produce(brokerAddress string, kafkaTopic string, message string) {
 
 	producer, errorIfProducerNotCreated := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": brokerAddress})

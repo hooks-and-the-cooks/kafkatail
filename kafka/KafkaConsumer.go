@@ -1,4 +1,4 @@
-package main
+package kafka
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"syscall"
 )
 
-func consume(brokerAddress string, topic string) {
+func Consume(brokerAddress string, topic string) {
 
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)

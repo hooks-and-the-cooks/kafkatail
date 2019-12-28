@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/kafkatail/kafka"
 	"github.com/urfave/cli/v2"
 	"os"
 )
@@ -23,7 +24,7 @@ func main() {
 					brokerAddress := context.Args().Get(0)
 					kafkaTopic := context.Args().Get(1)
 					message := context.Args().Get(2)
-					produce(brokerAddress, kafkaTopic, message)
+					kafka.Produce(brokerAddress, kafkaTopic, message)
 					return nil
 				},
 				Flags: nil,
@@ -36,7 +37,7 @@ func main() {
 				Action: func(context *cli.Context) error {
 					brokerAddress := context.Args().Get(0)
 					kafkaTopic := context.Args().Get(1)
-					consume(brokerAddress, kafkaTopic)
+					kafka.Consume(brokerAddress, kafkaTopic)
 					return nil
 				},
 				Flags: nil,
