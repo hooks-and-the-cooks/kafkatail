@@ -5,8 +5,7 @@ import (
 	"fmt"
 )
 
-func translate(binData []byte) map[string]string {
-
+func Translate(binData []byte) map[string]string {
 	var jsonMap map[string]string
 
 	err := json.Unmarshal(binData, &jsonMap)

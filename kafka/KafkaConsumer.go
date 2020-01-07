@@ -3,12 +3,13 @@ package kafka
 import (
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/kafkatail/translator"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
-func Consume(brokerAddress string, topic string) {
+func Consume(brokerAddress string, topic string, isMessageInBytes bool) {
 
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
@@ -41,10 +42,10 @@ func Consume(brokerAddress string, topic string) {
 
 			switch e := ev.(type) {
 			case *kafka.Message:
-				fmt.Printf("%% Message on %s:\n%s\n",
-					e.TopicPartition, string(e.Value))
-				if e.Headers != nil {
-					fmt.Printf("%% Headers: %v\n", e.Headers)
+				if isMessageInBytes {
+					fmt.Printf("%% Message on %s:\n%s\n", e.TopicPartition, translator.Translate(e.Value))
+				} else {
+					fmt.Printf("%% Message on %s:\n%s\n", e.TopicPartition, string(e.Value))
 				}
 			case kafka.Error:
 				_, _ = fmt.Fprintf(os.Stderr, "%% Error: %v: %v\n", e.Code(), e)

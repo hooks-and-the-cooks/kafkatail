@@ -37,7 +37,20 @@ func main() {
 				Action: func(context *cli.Context) error {
 					brokerAddress := context.Args().Get(0)
 					kafkaTopic := context.Args().Get(1)
-					kafka.Consume(brokerAddress, kafkaTopic)
+					kafka.Consume(brokerAddress, kafkaTopic, false)
+					return nil
+				},
+				Flags: nil,
+			},
+			{
+				Name:        "consumer-from-bytes",
+				Aliases:     []string{"cfb"},
+				Usage:       "Run Kafka tail in consumer mode and messages in bytes",
+				Description: "To Consume message from kafka",
+				Action: func(context *cli.Context) error {
+					brokerAddress := context.Args().Get(0)
+					kafkaTopic := context.Args().Get(1)
+					kafka.Consume(brokerAddress, kafkaTopic, true)
 					return nil
 				},
 				Flags: nil,

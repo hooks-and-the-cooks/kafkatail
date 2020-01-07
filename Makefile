@@ -11,3 +11,6 @@ compile:
 
 test:
 	GO111MODULE=on go test $(NOVENDOR)
+
+install:
+	GO111MODULE=on go install -v $(NOVENDOR)
