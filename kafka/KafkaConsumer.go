@@ -5,6 +5,7 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/kafkatail/translator"
 	"os"
+	"os/exec"
 	"os/signal"
 	"syscall"
 )
@@ -14,10 +15,11 @@ func Consume(brokerAddress string, topic string, isMessageInBytes bool) {
 	sigchan := make(chan os.Signal, 1)
 	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
 
+	consumerGroupName := "consumer-group-2"
 	consumer, _ := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers":     brokerAddress,
 		"broker.address.family": "v4",
-		"group.id":              "consumer-group-1",
+		"group.id":              consumerGroupName,
 		"session.timeout.ms":    6000,
 		"auto.offset.reset":     "latest"})
 
@@ -33,6 +35,11 @@ func Consume(brokerAddress string, topic string, isMessageInBytes bool) {
 		select {
 		case sig := <-sigchan:
 			fmt.Printf("Caught signal %v: terminating\n", sig)
+			err := exec.Command("kafka-consumer-groups", "--bootstrap-server", brokerAddress,
+				"--delete", "--group", consumerGroupName).Run()
+			if err != nil {
+				fmt.Println("kafka is not responding!!")
+			}
 			run = false
 		default:
 			ev := consumer.Poll(100)
@@ -53,7 +60,7 @@ func Consume(brokerAddress string, topic string, isMessageInBytes bool) {
 					run = false
 				}
 			default:
-				fmt.Println("Polling Continuosly, Please produce something")
+				fmt.Println("Polling Continuously, Please produce something")
 			}
 		}
 	}
